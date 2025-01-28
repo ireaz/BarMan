@@ -16,7 +16,13 @@ namespace BarMan.Models
         [Required]
         [DisplayName("نام راننده")]
         [StringLength(100)]
-        public string Name { get; set; }  
+        public string Name { get; set; }
+
+
+        [Required]
+        [DisplayName("راننده کدملی")]
+        [StringLength(10)]
+        public string DriverIDCode { get; set; }
 
         [Required]
         [StringLength(20)]
@@ -36,7 +42,7 @@ namespace BarMan.Models
 
 
 
-      //  public virtual ICollection<Transaction> Transactions { get; set; }  // ارتباط با تراکنش‌ها
+        public virtual ICollection<Transaction> Transactions { get; set; }  // ارتباط با تراکنش‌ها
 
     }
 }

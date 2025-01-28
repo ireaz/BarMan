@@ -41,11 +41,12 @@
             ProductNumber = new System.Windows.Forms.NumericUpDown();
             CBCategory = new System.Windows.Forms.ComboBox();
             panel3 = new System.Windows.Forms.Panel();
+            panel4 = new System.Windows.Forms.Panel();
+            textSerchProduct = new System.Windows.Forms.TextBox();
+            label5 = new System.Windows.Forms.Label();
             panel2 = new System.Windows.Forms.Panel();
             pictureBox1 = new System.Windows.Forms.PictureBox();
             label10 = new System.Windows.Forms.Label();
-            label5 = new System.Windows.Forms.Label();
-            textSerchProduct = new System.Windows.Forms.TextBox();
             panel5 = new System.Windows.Forms.Panel();
             label6 = new System.Windows.Forms.Label();
             label7 = new System.Windows.Forms.Label();
@@ -59,6 +60,7 @@
             DGVProduct = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)ProductNumber).BeginInit();
             panel3.SuspendLayout();
+            panel4.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel5.SuspendLayout();
@@ -166,14 +168,41 @@
             // panel3
             // 
             panel3.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            panel3.Controls.Add(panel4);
             panel3.Controls.Add(panel2);
-            panel3.Controls.Add(label5);
-            panel3.Controls.Add(textSerchProduct);
             panel3.Dock = System.Windows.Forms.DockStyle.Top;
             panel3.Location = new System.Drawing.Point(487, 0);
             panel3.Name = "panel3";
-            panel3.Size = new System.Drawing.Size(575, 113);
+            panel3.Size = new System.Drawing.Size(622, 113);
             panel3.TabIndex = 16;
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(textSerchProduct);
+            panel4.Controls.Add(label5);
+            panel4.Dock = System.Windows.Forms.DockStyle.Right;
+            panel4.Location = new System.Drawing.Point(399, 0);
+            panel4.Name = "panel4";
+            panel4.Size = new System.Drawing.Size(223, 113);
+            panel4.TabIndex = 3;
+            // 
+            // textSerchProduct
+            // 
+            textSerchProduct.Location = new System.Drawing.Point(9, 71);
+            textSerchProduct.Name = "textSerchProduct";
+            textSerchProduct.Size = new System.Drawing.Size(211, 23);
+            textSerchProduct.TabIndex = 0;
+            textSerchProduct.TextChanged += textSerchProduct_TextChanged_1;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(154, 42);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(50, 15);
+            label5.TabIndex = 1;
+            label5.Text = "جستوجو ";
+            label5.TextChanged += za;
             // 
             // panel2
             // 
@@ -204,23 +233,6 @@
             label10.Size = new System.Drawing.Size(110, 15);
             label10.TabIndex = 0;
             label10.Text = "اضافه کردن دستبندی";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(465, 38);
-            label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(50, 15);
-            label5.TabIndex = 1;
-            label5.Text = "جستوجو ";
-            // 
-            // textSerchProduct
-            // 
-            textSerchProduct.Location = new System.Drawing.Point(320, 67);
-            textSerchProduct.Name = "textSerchProduct";
-            textSerchProduct.Size = new System.Drawing.Size(211, 23);
-            textSerchProduct.TabIndex = 0;
-            textSerchProduct.TextChanged += textSerchProduct_TextChanged;
             // 
             // panel5
             // 
@@ -314,42 +326,46 @@
             // panel1
             // 
             panel1.Controls.Add(DGVProduct);
-            panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(487, 113);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(575, 543);
+            panel1.Size = new System.Drawing.Size(622, 543);
             panel1.TabIndex = 18;
             // 
             // DGVProduct
             // 
             DGVProduct.AllowUserToAddRows = false;
+            DGVProduct.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             DGVProduct.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DGVProduct.Dock = System.Windows.Forms.DockStyle.Right;
+            DGVProduct.Dock = System.Windows.Forms.DockStyle.Fill;
             DGVProduct.Location = new System.Drawing.Point(0, 0);
             DGVProduct.Name = "DGVProduct";
             DGVProduct.ReadOnly = true;
             DGVProduct.RowTemplate.Height = 25;
-            DGVProduct.Size = new System.Drawing.Size(575, 543);
+            DGVProduct.Size = new System.Drawing.Size(622, 543);
             DGVProduct.TabIndex = 16;
             DGVProduct.CellContentClick += DGVProduct_CellContentClick_1;
+            DGVProduct.RowsAdded += DGVProduct_RowsAdded;
             // 
             // FormProduct
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1062, 656);
+            ClientSize = new System.Drawing.Size(1109, 656);
             Controls.Add(panel1);
             Controls.Add(panel3);
             Controls.Add(panel5);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            KeyPreview = true;
             Name = "FormProduct";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "FormProduct";
             TopMost = true;
             Load += FormProduct_Load;
+            KeyDown += FormProduct_KeyDown;
             ((System.ComponentModel.ISupportInitialize)ProductNumber).EndInit();
             panel3.ResumeLayout(false);
-            panel3.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -390,5 +406,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Panel panel4;
     }
 }

@@ -11,9 +11,16 @@
     <Compile Remove="Migrations\20250118090945_dbBarMan.Designer.cs" />
     <Compile Remove="Migrations\20250118104913_dbBarMan.cs" />
     <Compile Remove="Migrations\20250118104913_dbBarMan.Designer.cs" />
+    <Compile Remove="Migrations\20250118115732_dbBarMan.cs" />
+    <Compile Remove="Migrations\20250118115732_dbBarMan.Designer.cs" />
+    <Compile Remove="Migrations\20250121114731_dbBarMan.cs" />
+    <Compile Remove="Migrations\20250121114731_dbBarMan.Designer.cs" />
+    <Compile Remove="Migrations\20250121115240_dbBarMan.cs" />
+    <Compile Remove="Migrations\20250121115240_dbBarMan.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">

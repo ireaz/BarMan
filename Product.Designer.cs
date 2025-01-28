@@ -45,9 +45,9 @@
             Lnew.AutoSize = true;
             Lnew.Location = new System.Drawing.Point(218, 51);
             Lnew.Name = "Lnew";
-            Lnew.Size = new System.Drawing.Size(83, 15);
+            Lnew.Size = new System.Drawing.Size(62, 15);
             Lnew.TabIndex = 15;
-            Lnew.Text = "اضافه کردن کالا";
+            Lnew.Text = "ویرایش کالا";
             // 
             // label2
             // 
@@ -74,7 +74,7 @@
             btnSave.Name = "btnSave";
             btnSave.Size = new System.Drawing.Size(99, 32);
             btnSave.TabIndex = 22;
-            btnSave.Text = "افزودن";
+            btnSave.Text = "ویرایش";
             btnSave.UseVisualStyleBackColor = true;
             btnSave.Click += btnSave_Click;
             // 
@@ -140,9 +140,11 @@
             Controls.Add(ProductNumber);
             Controls.Add(CBCategory);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            KeyPreview = true;
             Name = "EditProduct";
             Text = "ویرایش کالا";
             Load += EditProduct_Load;
+            KeyDown += EditProduct_KeyDown;
             ((System.ComponentModel.ISupportInitialize)ProductNumber).EndInit();
             ResumeLayout(false);
             PerformLayout();

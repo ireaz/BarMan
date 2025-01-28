@@ -10,6 +10,7 @@ namespace BarMan.Models
     public class Product
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProductID { get; set; }
 
         [Required]
@@ -31,6 +32,26 @@ namespace BarMan.Models
         public virtual Category Category { get; set; }
 
         public virtual ICollection<Transaction> Transactions { get; set; }
+
+    }
+    public class ProductAndCategoryName
+    {
+        
+        public int ProductId { get; set; }
+
+        [DisplayName("نام کالا")]
+        public string ProductName { get; set; }
+
+
+
+     
+        [DisplayName("موجودی کالا")]
+        public int ProductStock { get; set; }  // موجودی کالا
+
+       
+        [DisplayName("دسته‌بندی کالا")]
+        public string CategoryName { get; set; }
+
 
     }
 

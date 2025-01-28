@@ -45,9 +45,36 @@ namespace BarMan.Models
         [Required]
         [DisplayName("تاریخ تراکنش")]
         public DateTime Date { get; set; }
+        [Required]
+        [DisplayName("زمان تراکنش")]
+        public TimeSpan TimeT { get; set; }
 
         public virtual Product Product { get; set; }  // ارتباط با محصول
         public virtual Driver Driver { get; set; }    // ارتباط با راننده
         public virtual Suppliers Supplier { get; set; } // ارتباط با تامین‌کننده
     }
+
+    public class TransactionModel
+    {
+        [DisplayName("شناسه تراکنش")]
+        public int TransactionID { get; set; }
+        [DisplayName("کالا")]
+        public string ProductName { get; set; }
+        [DisplayName("نام راننده")]
+        public string DriverName { get; set; }
+        [DisplayName("نام خریدار")]
+        public string SupplierName { get; set; }
+        [DisplayName("تعداد کالا")]
+        public int Quantity { get; set; }
+        [DisplayName("قیمت ")]
+        public decimal Price { get; set; }
+        [DisplayName("نوع تراکنش")]
+        public string Type { get; set; }
+        [DisplayName("تاریخ تراکنش")]
+        public DateTime Date { get; set; }
+        [DisplayName("ساعت تراکنش")]
+        public TimeSpan Time { get; set; }
+    }
+
+
 }

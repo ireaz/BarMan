@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BarMan.Models
 {
     public class Category
     {
         [Key]
+       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CategoryID { get; set; }
 
         [Required]

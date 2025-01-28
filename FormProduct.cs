@@ -1,5 +1,6 @@
 ﻿using BarMan.Models;
 using BarMan.sourc;
+using DocumentFormat.OpenXml.InkML;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ namespace BarMan
 {
     public partial class FormProduct : Form
     {
-
+        public bool A;
         public FormProduct()
         {
             InitializeComponent();
@@ -23,20 +24,47 @@ namespace BarMan
         private void FormProduct_Load(object sender, EventArgs e)
         {
 
-            ClassDesign.ButtenDelet(DGVProduct);
-            ClassDesign.ButtenEdit(DGVProduct);
+            ClassDesign.AddButtonsToGrid(DGVProduct);
+
             ClassDesign.CustomizeDataGridView(DGVProduct);
-            ProductControll.DataGV(DGVProduct);
-            ProductControll.GetProductWithCategoryName();
+            A = false;
+
+            LodDGV();
+
+            CBLod();
 
 
-            CategoryControll.CategoryComboBox(CBCtegories);
 
-        }  
+
+
+
+
+        }
         private void textSerchProduct_TextChanged(object sender, EventArgs e)
         {
             DGVProduct.DataSource = ProductControll.FilterProducts(textSerchProduct.Text.ToString());
         }
+        public void CBLod()
+        {
+            var Category = CategoryControll.GetCategor_ID_Name();
+            if (Category != null && Category.Count > 0)
+            {
+                CBCtegories.DataSource = Category;
+                CBCtegories.DisplayMember = "CategoryName";
+                CBCtegories.ValueMember = "CategoryID";
+
+            }
+            else if (A == false)
+            {
+                MessageBox.Show("دسته بندی خالی استت دسته بندی را پر کنید ");
+                ShowCategoryForm();
+                A = true;
+
+            }
+
+
+        }
+
 
         private void DGVProduct_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
@@ -46,7 +74,7 @@ namespace BarMan
                 {    // گرفتن اطلاعات سطر انتخاب شده
                     var row = DGVProduct.Rows[e.RowIndex];
 
-                    // اگر می‌خواهید اطلاعات ردیف را برای عملیات حذف داشته باشید:
+                    //نگه داشتن اطلاعات کالا قبل از حذف 
                     var productName = row.Cells["ProductName"].Value.ToString();
                     var productStock = row.Cells["ProductStock"].Value.ToString();
 
@@ -55,12 +83,15 @@ namespace BarMan
 
                     if (result == DialogResult.Yes)
                     {
-                        // عملیات حذف محصول (با توجه به نیاز خود می‌توانید از دیتابیس حذف کنید)
-                        // فرض کنید که متد DeleteProduct را برای حذف محصول از دیتابیس دارید
+
                         DbContextHelper.Delete(ProductControll.FindProductByName(productName));  // حذف محصول بر اساس نام یا شناسه
 
-                       
-                        ProductControll.DataGV(DGVProduct);
+
+                        LodDGV();
+
+
+                        DatabaseManager.DeleteAll(ProductControll.GetProductID_With_Name(productName), "Product");
+
                     }
                 }
 
@@ -86,9 +117,9 @@ namespace BarMan
 
 
 
-                  var result = editProduct.ShowDialog();
+                    var result = editProduct.ShowDialog();
                     if (result == DialogResult.OK)
-                    ProductControll.DataGV(DGVProduct);
+                        LodDGV();
 
 
 
@@ -101,41 +132,43 @@ namespace BarMan
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            FormCategory category = new FormCategory();
-            
-            this.TopMost = false;
-            this.Hide();
+            ShowCategoryForm();
+            CBLod();
 
-           category.ShowDialog();
-            this.Show();
-            
         }
-
+        //دسترو ADD
         private void button2_Click(object sender, EventArgs e)
         {
             if (TBName.Text != "")
             {
                 string ProductName = TBName.Text.ToString();
-
-                if (ProductControll.IsProductNameAvailable(ProductName))
+                if (CBCtegories != null)
                 {
-                    int ProductStock = (int)NumberProduct.Value;
-                    int CategoryIdnew = (int)CBCtegories.SelectedValue;
-
-                    if (ProductControll.AddProduct(ProductName, ProductStock, CategoryIdnew))
+                    if (ProductControll.IsProductNameAvailable(ProductName))
                     {
-                        ProductControll.DataGV(DGVProduct);
+                        int ProductStock = (int)NumberProduct.Value;
+                        int CategoryIdnew = (int)CBCtegories.SelectedValue;
 
-                        MessageBox.Show("محصول ثبت شد", "هشدار");
+                        if (ProductControll.AddProduct(ProductName, ProductStock, CategoryIdnew))
+                        {
+                            LodDGV();
+
+                            MessageBox.Show("محصول ثبت شد", "هشدار");
+
+                        }
+                        else { MessageBox.Show("مشکل در ثبت محصول", "هشدار"); }
 
                     }
-                    else { MessageBox.Show("مشکل در ثبت محصول", "هشدار"); }
+                    else
+                    {
+                        MessageBox.Show("این محصول وجود دارد", "هشدار");
 
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("این محصول وجود دارد", "هشدار");
-
+                    MessageBox.Show("دسته بندی خالی است اول دسته بندی ثبت کنید ", "هشدار");
+                    ShowCategoryForm();
                 }
 
 
@@ -147,6 +180,86 @@ namespace BarMan
 
 
 
+        }
+
+        private void DGVProduct_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            DGVProduct.Columns["ProductID"].Visible = false;
+            DGVProduct.Columns["CategoryID"].Visible = false;
+
+
+
+            if (DGVProduct.Columns["ProductName"] == null)
+            {
+                DGVProduct.Columns.Add("ProductName", "نام کالا");
+            }
+            if (DGVProduct.Columns["ProductStock"] == null)
+            {
+                DGVProduct.Columns.Add("ProductStock", "موجودی کالا");
+            }
+            if (DGVProduct.Columns["CategoryName"] == null)
+            {
+                DGVProduct.Columns.Add("CategoryName", "نام دسته‌بندی");
+            }
+
+            // تنظیم نام ستون‌ها
+            DGVProduct.Columns["ProductName"].HeaderText = "نام کالا";
+            DGVProduct.Columns["ProductStock"].HeaderText = "موجودی کالا";
+            DGVProduct.Columns["CategoryName"].HeaderText = "نام دسته‌بندی";
+        }
+
+
+        private void LodDGV()
+        {
+            ProductControll.GetProductsSortedByCategory();
+            if (textSerchProduct.Text != "")
+            {
+
+                DGVProduct.DataSource = ProductControll.FilterProducts(textSerchProduct.Text.ToString());
+
+
+            }
+            else
+            {
+                DGVProduct.DataSource = ProductControll.GetProductsSortedByCategory();
+            }
+
+
+
+
+        }
+        public void ShowCategoryForm()
+        {
+            FormCategory category = new FormCategory();
+
+            this.TopMost = false;
+            this.Hide();
+
+            category.ShowDialog();
+            CategoryControll.CategoryData = null;
+            LodDGV();
+            this.Show();
+
+        }
+
+        private void FormProduct_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+        }
+
+        private void za(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textSerchProduct_TextChanged_1(object sender, EventArgs e)
+        {
+            DGVProduct.DataSource = ProductControll.FilterProducts(textSerchProduct.Text.ToString());
+            
         }
     }
 }

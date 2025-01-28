@@ -1,11 +1,14 @@
-﻿using BarMan.sourc;
+﻿using BarMan.Models;
+using BarMan.sourc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace BarMan
 {
@@ -25,7 +28,7 @@ namespace BarMan
             Tproductname.Text = productName;
             ProductNumber.Value = productnumber;
             CategoryControll.CategoryComboBox(CBCategory);
-            CBCategory.SelectedIndex = categoryId;
+            CBCategory.SelectedValue = categoryId;
 
         }
 
@@ -36,8 +39,12 @@ namespace BarMan
             productName = name;
             productId = productid;
             productnumber = Stock;
-            categoryId = categoryid-1;
+            categoryId = categoryid;
         }
+
+
+
+
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -60,8 +67,25 @@ namespace BarMan
 
         private void btncCancel_Click(object sender, EventArgs e)
         {
-            
+
             this.Close();
+        }
+
+        private void EditProduct_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+
+                e.SuppressKeyPress = true;
+
+
+
+                this.SelectNextControl((ActiveControl), true, true, true, true);
+            }
+          else  if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
         }
     }
 }

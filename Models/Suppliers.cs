@@ -11,11 +11,17 @@ namespace BarMan.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       
         public int SupplierID { get; set; }
         [DisplayName("نام تامین کننده")]
         [Required]
         [StringLength(100)]
         public string SupplierName { get; set; }
+
+        [DisplayName("کدملی تامین کننده")]
+        [Required]
+        [StringLength(10)]
+        public string Supplier_ID_Code { get; set; }
 
 
         [DisplayName("شماره تماس تامین کننده")]
@@ -27,7 +33,7 @@ namespace BarMan.Models
         public string Email { get; set;}
 
         [DisplayName("توضیحات")]
-        [Required]
+        
         
         public string Description { get; set; }
 

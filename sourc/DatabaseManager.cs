@@ -55,13 +55,15 @@ namespace BarMan
                     if (runform)
                     {
                         loadingForm.UpdateStatus(" دیتابیس ساخته شد");
-                        await Task.Delay(3000);
+                        Thread.Sleep(1000);
+                  
+
+
                     }
                     loadingForm.Invoke(new Action(() => loadingForm.Close()));
                 }
 
-                // منتظر اتمام Task فرم لودینگ
-                loadingTask.Wait();
+               
             }
         }
 
@@ -81,21 +83,67 @@ namespace BarMan
 
 
 
-        public static bool Login(string username, string password)
+       
+
+
+
+        public static void DeleteAll(int id, string tableName)
         {
+            DbContextHelper.ExecuteInDbContext(context =>
+            {
+                switch (tableName.ToLower())
+                {
+                    case "category":
+                        var category = context.Set<Category>().FirstOrDefault(c => c.CategoryID == id);
+                        if (category != null)
+                        {
+                            context.Set<Category>().Remove(category);
+                        }
+                        break;
 
-            return DbContextHelper.ExecuteInDbContext(context => context.Admins.Any(
-                
-                admin => admin.UserName == username && admin.Password == password)                               
-            );
+                    case "driver":
+                        var driver = context.Set<Driver>().FirstOrDefault(d => d.DriverID == id);
+                        if (driver != null)
+                        {
+                            context.Set<Driver>().Remove(driver);
+                        }
+                        break;
 
-          
+                    case "product":
+                        var product = context.Set<Product>().FirstOrDefault(p => p.ProductID == id);
+                        if (product != null)
+                        {
+                            context.Set<Product>().Remove(product);
+                        }
+                        break;
+
+                    case "suppliers":
+                        var supplier = context.Set<Suppliers>().FirstOrDefault(s => s.SupplierID == id);
+                        if (supplier != null)
+                        {
+                            context.Set<Suppliers>().Remove(supplier);
+                        }
+                        break;
+
+                    case "transaction":
+                        var transaction = context.Set<Transaction>().FirstOrDefault(t => t.TransactionID == id);
+                        if (transaction != null)
+                        {
+                            context.Set<Transaction>().Remove(transaction);
+                        }
+                        break;
+
+                    default:
+                        throw new ArgumentException("جدول مشخص شده یافت نشد.");
+                }
+
+                context.SaveChanges();
+            });
         }
 
 
-     
 
-      
+
 
 
 

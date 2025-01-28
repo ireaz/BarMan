@@ -49,6 +49,7 @@ namespace BarMan.Migrations
                     DriverID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
+                    DriverIDCode = table.Column<string>(maxLength: 10, nullable: false),
                     Phone = table.Column<string>(maxLength: 20, nullable: false),
                     VehicleType = table.Column<string>(maxLength: 100, nullable: false),
                     VehicleNumber = table.Column<string>(maxLength: 50, nullable: false)
@@ -65,9 +66,10 @@ namespace BarMan.Migrations
                     SupplierID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SupplierName = table.Column<string>(maxLength: 100, nullable: false),
+                    Supplier_ID_Code = table.Column<string>(maxLength: 10, nullable: false),
                     ContactNumber = table.Column<string>(maxLength: 11, nullable: false),
                     Email = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: false)
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,7 +109,8 @@ namespace BarMan.Migrations
                     Quantity = table.Column<int>(nullable: false),
                     Price = table.Column<decimal>(nullable: false),
                     Type = table.Column<string>(maxLength: 10, nullable: false),
-                    Date = table.Column<DateTime>(nullable: false)
+                    Date = table.Column<DateTime>(nullable: false),
+                    TimeT = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -38,6 +38,7 @@
             Name = "LoadingForm";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "LoadingForm";
+            Load += LoadingForm_Load;
             ResumeLayout(false);
         }
 

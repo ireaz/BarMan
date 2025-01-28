@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using BarMan.Models;
+
 using System.Reflection;
 
 namespace BarMan.sourc
@@ -15,12 +15,12 @@ namespace BarMan.sourc
     internal class ProductControll
     {
         public static List<object> ProductData { get; set; } = new List<object>();
-
+        public static List<ProductAndCategoryName> ProductDataHome { get; set; } = new List<ProductAndCategoryName>();
 
         public static List<object> GetProductWithCategoryName()
         {
 
-            ProductData = DbContextHelper.ExecuteInDbContext(context =>  // ایجاد scope جدید
+            return DbContextHelper.ExecuteInDbContext(context =>  // ایجاد scope جدید
             {
 
                 return context.Products
@@ -35,57 +35,33 @@ namespace BarMan.sourc
 
 
             });
-            return ProductData;
-        }
-
-
-
-        public static void DataGV(DataGridView DGV)
-        {
-
-            var products =GetProductsSortedByCategory();
-
-            if (products != null && products.Count > 0)
-            {
-                ClassDesign.CustomizeDataGridView(DGV);
-
-                // تبدیل به لیست و بررسی null برای Category
-                 ProductData = products.ToList<object>();
-
-                DGV.DataSource = ProductData;
-                
-            }
-            else
-            {
-                // در صورت خالی بودن داده‌ها، فقط نام ستون‌ها تنظیم می‌شود
-                DGV.DataSource = null;  // خالی کردن DataGridView
-            }
-            DGV.Columns["ProductID"].Visible= false;
-            DGV.Columns["CategoryID"].Visible = false;
            
+        }
 
 
-            if (DGV.Columns["ProductName"] == null)
+        public static List <object> GetProduct_ID_Name() {
+
+            return DbContextHelper.ExecuteInDbContext(context =>  
             {
-                DGV.Columns.Add("ProductName", "نام کالا");
-            }
-            if (DGV.Columns["ProductStock"] == null)
-            {
-                DGV.Columns.Add("ProductStock", "موجودی کالا");
-            }
-            if (DGV.Columns["CategoryName"] == null)
-            {
-                DGV.Columns.Add("CategoryName", "نام دسته‌بندی");
-            }
 
-            // تنظیم نام ستون‌ها
-            DGV.Columns["ProductName"].HeaderText = "نام کالا";
-            DGV.Columns["ProductStock"].HeaderText = "موجودی کالا";
-            DGV.Columns["CategoryName"].HeaderText = "نام دسته‌بندی";
+                return context.Products             
+               .Select(p => new
+               {
+                   p.ProductID,
+                   p.ProductName         
+                          
+               
+               })
+                 .ToList<object>(); 
 
 
+            });
 
         }
+      
+
+
+
 
 
 
@@ -96,16 +72,20 @@ namespace BarMan.sourc
 
             var filteredProducts = ProductData.Where(p =>
             {
-                // فرض بر این است که p.ProductName و p.CategoryName به عنوان string در نظر گرفته می‌شود
-                var product = (dynamic)p;  // استفاده از dynamic برای دسترسی به ویژگی‌های شیء ناشناخته
+                //dynamic
+                var product = (dynamic)p; 
 
-                // بررسی اینکه آیا محصول یا دسته‌بندی حاوی فیلتر است یا خیر
+               
                 return product.ProductName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
                        product.CategoryName.Contains(filter, StringComparison.OrdinalIgnoreCase);
             }).ToList();
 
             return filteredProducts;
         }
+
+
+    
+
 
 
         public static BarMan.Models.Product FindProductByName(string productName)
@@ -118,12 +98,33 @@ namespace BarMan.sourc
             });
 
         }
+        public static BarMan.Models.Product FindProductByID(int productID)
+        {
+            return DbContextHelper.ExecuteInDbContext(context =>
+            {
+                // جستجو برای اولین محصول با نام مشخص
+                return context.Products
+                    .FirstOrDefault(p => p.ProductID == productID); // اگر رکورد پیدا نشد، مقدار null برمی‌گرداند
+            });
+
+        }
+        public static int FindStockByID(int productID)
+        {
+            return DbContextHelper.ExecuteInDbContext(context =>
+            {
+                
+                return context.Products
+                    .Where(p => p.ProductID == productID)
+                    .Select(p => p.ProductStock)
+                    .FirstOrDefault(); 
+            });
+        }
 
 
-       
+
         public static List<object> GetProductsSortedByCategory()
         {
-           return DbContextHelper.ExecuteInDbContext(context =>
+            return ProductData= DbContextHelper.ExecuteInDbContext(context =>
             {
                 // بارگذاری محصولات به همراه دسته‌بندی‌های آن‌ها (برای دسته‌بندی‌های فرزند و والد)
                 var products = context.Products
@@ -211,7 +212,69 @@ namespace BarMan.sourc
 
         }
 
+        public static void UpdateProudactNUM(int productID, int number)
+        {
+            try
+            {
+                var product = FindProductByID(productID);
+                product.ProductStock += number;
 
+
+
+
+                DbContextHelper.Update(product);
+            }
+            catch { MessageBox.Show("فرایند ویرایش تعداد کالا با مشکل مواجه شد"); }
+        }
+        
+        public static int GetProductID_With_Name(string Productname)
+        {
+            return DbContextHelper.ExecuteInDbContext(context =>
+            {
+                return context.Products
+                .Where(p => p.ProductName.ToLower() == Productname.ToLower())
+                    .Select(d => d.ProductID)
+                    .FirstOrDefault(); // بازیابی اولین شناسه یا مقدار پیش‌فرض (صفر برای int)
+            });
+        }
+
+
+        public static List<ProductAndCategoryName> ProductHome()
+        {
+            return ProductDataHome= DbContextHelper.ExecuteInDbContext(context =>
+
+            {
+                return context.Products
+               .Include(C => C.Category)
+               .Select(p => new ProductAndCategoryName
+               {
+                   ProductId=p.ProductID,
+                   ProductName = p.ProductName,
+                   ProductStock = p.ProductStock,
+                   CategoryName = p.Category.CategoryName // فرض بر این است که CategoryName در مدل Category وجود دارد
+
+               }).ToList<ProductAndCategoryName>();
+
+
+            });
+        }
+        public static List<ProductAndCategoryName> FilterProductshome(string filter)
+        {
+            if (string.IsNullOrEmpty(filter))
+                return ProductDataHome;
+
+            var filteredProducts =ProductDataHome.Where(p =>
+            {
+                //dynamic
+                var product = (dynamic)p;
+
+
+                return product.ProductName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                       product.CategoryName.Contains(filter, StringComparison.OrdinalIgnoreCase);
+            }).ToList();
+
+            return filteredProducts;
+        }
 
     }
 

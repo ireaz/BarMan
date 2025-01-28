@@ -65,6 +65,9 @@ namespace BarMan
             }
         }
 
+        private void LoadingForm_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }

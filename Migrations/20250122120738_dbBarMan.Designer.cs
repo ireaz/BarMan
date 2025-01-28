@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarMan.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    [Migration("20250118115732_dbBarMan")]
+    [Migration("20250122120738_dbBarMan")]
     partial class dbBarMan
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,11 @@ namespace BarMan.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DriverIDCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
@@ -139,7 +144,6 @@ namespace BarMan.Migrations
                         .HasMaxLength(11);
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -149,6 +153,11 @@ namespace BarMan.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
+
+                    b.Property<string>("Supplier_ID_Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.HasKey("SupplierID");
 
@@ -179,6 +188,9 @@ namespace BarMan.Migrations
 
                     b.Property<int>("SupplierID")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeT")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -215,7 +227,7 @@ namespace BarMan.Migrations
             modelBuilder.Entity("BarMan.Models.Transaction", b =>
                 {
                     b.HasOne("BarMan.Models.Driver", "Driver")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("DriverID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

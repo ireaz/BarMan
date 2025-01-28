@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
@@ -28,6 +29,9 @@ namespace BarMan.sourc
             DGV.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             DGV.GridColor = Color.Gray;
             DGV.RightToLeft = RightToLeft.Yes;
+            EnableSortingOnAllColumns(DGV);
+
+            DGV.AllowUserToOrderColumns = true;
 
 
 
@@ -37,34 +41,46 @@ namespace BarMan.sourc
 
 
 
-        public static void ButtenDelet(DataGridView dataGridView)
-          {
-        DataGridViewImageColumn deleteButtonColumn = new DataGridViewImageColumn();
-        deleteButtonColumn.Name = "Delete";
+        public static void AddButtonsToGrid(DataGridView dataGridView)
+        {
+            // افزودن دکمه حذف
+            DataGridViewImageColumn deleteButtonColumn = new DataGridViewImageColumn();
+            deleteButtonColumn.Name = "Delete";
             deleteButtonColumn.HeaderText = "حذف";
             deleteButtonColumn.Image = Properties.Resources.Delete;
             deleteButtonColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
-            deleteButtonColumn.Width = 50;
+            deleteButtonColumn.Width = 50; 
+            deleteButtonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None; 
             dataGridView.Columns.Add(deleteButtonColumn);
 
-
             // افزودن دکمه ویرایش
-         
-
-        }
-        public static void ButtenEdit(DataGridView dataGridView)
-        {
-
             DataGridViewImageColumn editButtonColumn = new DataGridViewImageColumn();
             editButtonColumn.Name = "Edit";
             editButtonColumn.HeaderText = "ویرایش";
             editButtonColumn.Image = Properties.Resources.Edit;
             editButtonColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
-            editButtonColumn.Width = 50;
+            editButtonColumn.Width = 50; 
+            editButtonColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None; 
             dataGridView.Columns.Add(editButtonColumn);
 
+           
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
+        public static void HindenTabPages(TabControl tabControl,TabPage TPHiden, TabPage TPShow)
+        {
 
+            tabControl.TabPages.Remove(TPHiden);
+            tabControl.TabPages.Add(TPShow);
+
+
+        }
+        public static void EnableSortingOnAllColumns(DataGridView dataGridView)
+        {
+            foreach (DataGridViewColumn column in dataGridView.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.Automatic;
+            }
+        }
 
 
     }

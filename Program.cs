@@ -12,8 +12,9 @@ namespace BarMan
         [STAThread]
         static void Main()
         {
-           // db_Connect.Initialize();
-
+            // db_Connect.Initialize();
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("fa-IR");
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fa-IR");
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -24,8 +25,10 @@ namespace BarMan
             // بررسی وجود دیتابیس
             DatabaseManager.EnsureDatabaseExistsAsync().Wait();
 
-           // isAdmin();
+             isAdmin();
             // بررسی رکوردهای جدول Admin
+         
+
 
             Application.Run(new Home());
             
